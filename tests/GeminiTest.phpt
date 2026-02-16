@@ -12,10 +12,16 @@ require __DIR__ . '/bootstrap.php';
 $dueDate = new DateTimeImmutable('2023-01-01');
 $gemini = new Gemini(Gemini::TYPE_UHRADA, $dueDate);
 $gemini->setSender('0100', '1234567890', '123456');
+$gemini->setSenderAccountName('My Company');
 
 $item1 = new Item('111111-2222222222/0300', 100.50, '5555555555');
 $item1->setConstSym('0308');
 $item1->setMessage('Test payment 1');
+$item1->setAccountName('Partner Company');
+$item1->setSecondaryVarSym('9999999999');
+$item1->setSecondarySpecSym('8888888888');
+$item1->setSecondaryMessage('Ref for me');
+$item1->setBankInfo('Note for bank');
 $gemini->addItem($item1);
 
 $item2 = new Item('3333333333/0800', 50.00, '6666666666');
@@ -26,8 +32,7 @@ $gemini->addItem($item2);
 $generated = $gemini->generate();
 
 // Verify output format
-$lines = explode("
-", $generated);
+$lines = explode("\r\n", $generated);
 Assert::count(2, $lines);
 
 // Line 1 check
@@ -50,6 +55,25 @@ Assert::same('10050          ', substr($line1, 28, 15)); // Amount (100.50 * 100
 
 // Due date
 Assert::same('230101', substr($line1, 43, 6)); // Due date 2023-01-01
+
+// Extended fields check
+// Pos 252 (Index 251): Sender Account Name (20 chars)
+Assert::same('My Company          ', substr($line1, 251, 20));
+
+// Pos 272 (Index 271): Recipient Account Name (20 chars)
+Assert::same('Partner Company     ', substr($line1, 271, 20));
+
+// Pos 292 (Index 291): Secondary VS (10 chars, 0 padded left)
+Assert::same('9999999999', substr($line1, 291, 10));
+
+// Pos 302 (Index 301): Secondary SS (10 chars, 0 padded left)
+Assert::same('8888888888', substr($line1, 301, 10));
+
+// Pos 312 (Index 311): Secondary Message (140 chars)
+Assert::same('Ref for me                                                                                                                                  ', substr($line1, 311, 140));
+
+// Pos 452 (Index 451): Bank Info (140 chars)
+Assert::same('Note for bank                                                                                                                               ', substr($line1, 451, 140));
 
 // Line 2 check
 $line2 = $lines[1];
@@ -76,7 +100,6 @@ $item = new Item('111111-2222222222/0300', 100.50, '5555555555');
 $gemini->addItem($item);
 $output = $gemini->generate();
 // Check if sender bank code (0100) is present at correct position
-$lines = explode("
-", $output);
+$lines = explode("\r\n", $output);
 $line1 = $lines[0];
 Assert::same('0100', substr($line1, 14, 4));

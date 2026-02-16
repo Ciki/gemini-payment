@@ -33,6 +33,21 @@ final class Item
 	/** @var string max 140 chars */
 	private string $message = '';
 
+	/** @var string max 20 chars */
+	private string $accountName = '';
+
+	/** @var string max 10 numbers */
+	private string $secondaryVarSym = '';
+
+	/** @var string max 10 numbers */
+	private string $secondarySpecSym = '';
+
+	/** @var string max 140 chars */
+	private string $secondaryMessage = '';
+
+	/** @var string max 140 chars */
+	private string $bankInfo = '';
+
 
 	public function __construct(string $fullAccountNumber, float $amount, string $varSym)
 	{
@@ -76,6 +91,13 @@ final class Item
 	}
 
 
+	public function setAccountName(string $name): self
+	{
+		$this->accountName = Strings::truncate(Strings::toAscii($name), 20, '');
+		return $this;
+	}
+
+
 	public function setVarSym(string $number): self
 	{
 		$len = 10;
@@ -83,6 +105,17 @@ final class Item
 			throw new InvalidArgumentException("Parameter \$number must be numeric string of max length {$len}!");
 		}
 		$this->varSym = $number;
+		return $this;
+	}
+
+
+	public function setSecondaryVarSym(string $number): self
+	{
+		$len = 10;
+		if (!empty($number) && !is_numeric($number) || strlen($number) > $len) {
+			throw new InvalidArgumentException("Parameter \$number must be numeric string of max length {$len}!");
+		}
+		$this->secondaryVarSym = $number;
 		return $this;
 	}
 
@@ -109,9 +142,34 @@ final class Item
 	}
 
 
+	public function setSecondarySpecSym(string $number): self
+	{
+		$len = 10;
+		if (!empty($number) && !is_numeric($number) || strlen($number) > $len) {
+			throw new InvalidArgumentException("Parameter \$number must be numeric string of max length {$len}!");
+		}
+		$this->secondarySpecSym = $number;
+		return $this;
+	}
+
+
 	public function setMessage(string $msg): self
 	{
 		$this->message = Strings::truncate(Strings::toAscii($msg), 140, '');
+		return $this;
+	}
+
+
+	public function setSecondaryMessage(string $msg): self
+	{
+		$this->secondaryMessage = Strings::truncate(Strings::toAscii($msg), 140, '');
+		return $this;
+	}
+
+
+	public function setBankInfo(string $info): self
+	{
+		$this->bankInfo = Strings::truncate(Strings::toAscii($info), 140, '');
 		return $this;
 	}
 
@@ -134,15 +192,33 @@ final class Item
 	}
 
 
+	public function getAccountName(): string
+	{
+		return $this->accountName;
+	}
+
+
 	public function getVarSym(): string
 	{
 		return $this->varSym;
 	}
 
 
+	public function getSecondaryVarSym(): string
+	{
+		return $this->secondaryVarSym;
+	}
+
+
 	public function getSpecSym(): string
 	{
 		return $this->specSym;
+	}
+
+
+	public function getSecondarySpecSym(): string
+	{
+		return $this->secondarySpecSym;
 	}
 
 
@@ -155,5 +231,17 @@ final class Item
 	public function getMessage(): string
 	{
 		return $this->message;
+	}
+
+
+	public function getSecondaryMessage(): string
+	{
+		return $this->secondaryMessage;
+	}
+
+
+	public function getBankInfo(): string
+	{
+		return $this->bankInfo;
 	}
 }

@@ -111,7 +111,7 @@ final class Item
 
 	public function setMessage(string $msg): self
 	{
-		$this->message = Strings::truncate(Strings::toAscii($msg), 140);
+		$this->message = Strings::truncate(Strings::toAscii($msg), 140, '');
 		return $this;
 	}
 

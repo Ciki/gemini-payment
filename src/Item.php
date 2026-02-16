@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ciki\GeminiPayment;
@@ -6,7 +7,7 @@ namespace Ciki\GeminiPayment;
 use InvalidArgumentException;
 use Nette\Utils\Strings;
 
-class Item
+final class Item
 {
 	/** @var string recipient account prefix max 6 numbers */
 	private string $accountPrefix = '';
@@ -79,7 +80,7 @@ class Item
 	{
 		$len = 10;
 		if (!empty($number) && !is_numeric($number) || strlen($number) > $len) {
-			throw new InvalidArgumentException("Parameter \$number must be numeric string of max length $len!");
+			throw new InvalidArgumentException("Parameter \$number must be numeric string of max length {$len}!");
 		}
 		$this->varSym = $number;
 		return $this;
@@ -90,7 +91,7 @@ class Item
 	{
 		$len = 10;
 		if (!empty($number) && !is_numeric($number) || strlen($number) > $len) {
-			throw new InvalidArgumentException("Parameter \$number must be numeric string of max length $len!");
+			throw new InvalidArgumentException("Parameter \$number must be numeric string of max length {$len}!");
 		}
 		$this->constSym = $number;
 		return $this;
@@ -101,7 +102,7 @@ class Item
 	{
 		$len = 10;
 		if (!empty($number) && !is_numeric($number) || strlen($number) > $len) {
-			throw new InvalidArgumentException("Parameter \$number must be numeric string of max length $len!");
+			throw new InvalidArgumentException("Parameter \$number must be numeric string of max length {$len}!");
 		}
 		$this->specSym = $number;
 		return $this;
@@ -155,6 +156,4 @@ class Item
 	{
 		return $this->message;
 	}
-
-
 }

@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ciki\GeminiPayment;
 
-class Utils
+final class Utils
 {
-
 	/**
 	 * @param string $fullAccountNumber in format (xxxxxx-)xxxxxxxx/xxxx
 	 */
@@ -24,6 +24,4 @@ class Utils
 
 		return [$accountPrefix, $accountNumber, $bankCode];
 	}
-
-
 }

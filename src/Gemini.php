@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ciki\GeminiPayment;
@@ -10,11 +11,11 @@ use InvalidArgumentException;
 /**
  * @link https://www.rb.cz/attachments/direct-banking/ekomunikator-datova-struktura.pdf
  */
-class Gemini
+final class Gemini
 {
-	/** @type int 2 numbers */
-	const TYPE_UHRADA = 11;
-	const TYPE_INKASO = 32;
+	/** @var int 2 numbers */
+	const int TYPE_UHRADA = 11;
+	const int TYPE_INKASO = 32;
 
 
 	private DateTimeInterface $dueDate;
@@ -98,7 +99,7 @@ class Gemini
 	{
 		$today = new DateTimeImmutable();
 
-//		$senderAccountName = str_pad($this->senderAccountName ?? '', 20, '0', STR_PAD_LEFT);
+		// $senderAccountName = str_pad($this->senderAccountName ?? '', 20, '0', STR_PAD_LEFT);
 		$senderAccountPrefix = str_pad($this->senderAccountPrefix, 6, '0', STR_PAD_LEFT);
 		$senderAccountNumber = str_pad($this->senderAccountNumber, 10, '0', STR_PAD_LEFT);
 		$senderBankCode = $this->senderBankCode;
@@ -118,20 +119,20 @@ class Gemini
 			$specSym = str_pad($item->getSpecSym(), 10, '0', STR_PAD_LEFT);
 			$recipientAccountPrefix = str_pad($item->getAccountPrefix(), 6, '0', STR_PAD_LEFT);
 			$recipientAccountNumber = str_pad($item->getAccountNumber(), 10, '0', STR_PAD_LEFT);
-//			$recipientAccountName = str_pad('', 20, '0', STR_PAD_LEFT);// empty
+			// $recipientAccountName = str_pad('', 20, '0', STR_PAD_LEFT);// empty
 			$msg = $item->getMessage();
 
 			$row = $rowNoPadded . $paymentType . $today->format('ymd') . $senderBankCode . $space3 . $recipientBankCode . $space3 . $amountInCents
 				. $dueDate . $constSym . $varSym . $specSym . $senderAccountPrefix . $senderAccountNumber
 				. $recipientAccountPrefix . $recipientAccountNumber
 				. $msg
-			// below not used fields
-//				. $senderAccountName
-//				. $recipientAccountName
-//				. $varSymDebet
-//				. $specSymDebet
-//				. $msgDebet
-//				. $bankInfo
+				// below not used fields
+				// . $senderAccountName
+				// . $recipientAccountName
+				// . $varSymDebet
+				// . $specSymDebet
+				// . $msgDebet
+				// . $bankInfo
 			;
 
 			$rows[] = $row;
@@ -139,6 +140,4 @@ class Gemini
 		$rowsStr = join("\r\n", $rows);
 		return $rowsStr;
 	}
-
-
 }
